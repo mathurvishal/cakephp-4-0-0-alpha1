@@ -1,0 +1,51 @@
+language: php
+
+php:
+  - 7.1
+  - 7.2
+  - 7.3
+
+sudo: false
+
+cache:
+  directories:
+    - vendor
+    - $HOME/.composer/cache
+
+env:
+  global:
+    - DEFAULT=1
+    - PHPSTAN=0
+    - CODECOVERAGE=0
+
+matrix:
+  include:
+    - php: 7.2
+      env: CODECOVERAGE=1 DEFAULT=0
+
+    - php: 7.2
+      env: PHPCS=1 DEFAULT=0
+
+    - php: 7.2
+      env: PHPSTAN=1 DEFAULT=0
+
+  fast_finish: true
+
+before_install:
+  - if [ $TRAVIS_PHP_VERSION != 7.3 ]; then phpenv config-rm xdebug.ini; fi
+
+install:
+  - travis_retry composer install --no-interaction --prefer-dist
+
+script:
+  - if [[ $CODECOVERAGE = 1 ]]; then vendor/bin/phpunit --coverage-clover=clover.xml; fi
+  - if [[ $DEFAULT = 1 ]]; then vendor/bin/phpunit; fi
+
+  - if [[ $PHPCS = 1 ]]; then vendor/bin/phpcs ./src ./tests; fi
+  - if [[ $PHPSTAN = 1 ]]; then composer require --dev phpstan/phpstan:^0.11 && vendor/bin/phpstan analyse src; fi
+
+after_success:
+  - if [[ $CODECOVERAGE = 1 ]]; then bash <(curl -s https://codecov.io/bash); fi
+
+notifications:
+  email: false

@@ -1,0 +1,72 @@
+parameters:
+    level: 4
+    autoload_files:
+        - tests/bootstrap.php
+    ignoreErrors:
+        - '#Constructor of class Cake\\[a-zA-Z0-9_\\]+ has an unused parameter#'
+        - '#Access to undefined constant Memcached::OPT_CLIENT_MODE#'
+        - '#Access to undefined constant Memcached::DYNAMIC_CLIENT_MODE#'
+        - '#Access to undefined constant PDO::SQLSRV_ATTR_ENCODING#'
+        - '#Access to undefined constant PDO::SQLSRV_ENCODING_BINARY#'
+        - '#Access to an undefined property Psr\\Http\\Message\\UriInterface::\$webroot#'
+        - '#Access to an undefined property Psr\\Http\\Message\\UriInterface::\$base#'
+        - '#Access to an undefined property Exception::\$queryString#'
+        - '#Access to an undefined property PHPUnit\\Framework\\Test::\$fixtureManager#'
+        - '#Call to an undefined method Traversable::getArrayCopy().#'
+        - '#Cannot call method lastInsertId\(\) on null#'
+        - '#Access to an undefined property Cake\\Mailer\\Renderer::\$request#'
+        - '#Access to an undefined property Cake\\Mailer\\Renderer::\$response#'
+        - '#Call to an undefined method Cake\\Auth\\Storage\\StorageInterface::getConfig\(\)#'
+        - '#Call to an undefined method Cake\\Auth\\Storage\\StorageInterface::setConfig\(\)#'
+        - '#Variable \$_SESSION in isset\(\) always exists and is not nullable#'
+        - '#Access to an undefined static property Cake\\Mailer\\Email::\$_dsnClassMap#'
+        - '#PHPDoc tag @throws with type PHPUnit\\Exception|Throwable is not subtype of Throwable#'
+        - '#Binary operation "\+" between array|false and array results in an error#'
+        - '#Call to an undefined method Cake\\Chronos\\DifferenceFormatterInterface::dateAgoInWords\(\)#'
+        - '#Call to an undefined method Cake\\Chronos\\DifferenceFormatterInterface::timeAgoInWords\(\)#'
+        - '#Return type \(void\) of method Cake\\Shell\\[A-Za-z]+Shell::main\(\) should be compatible with return type \(bool|int|null\) of method Cake\\Console\\Shell::main\(\)#'
+        - '#Property Cake\\TestSuite\\Fixture\\TestFixture::\$_schema \(Cake\\Database\\Schema\\SqlGeneratorInterface&Cake\\Database\\Schema\\TableSchemaInterface\) does not accept Cake\\Database\\Schema\\TableSchemaInterface#'
+        - '#Return type \(null\) of method Cake\\Collection\\Iterator\\NoChildrenIterator::getChildren\(\) should be compatible with return type \(RecursiveIterator\) of method RecursiveIterator::getChildren\(\)#'
+        -
+            message: '#Right side of && is always false#'
+            path: 'src/Cache/Engine/MemcachedEngine.php'
+        -
+            message: '#Call to function method_exists\(\) with string and [^ ]+ will always evaluate to false#'
+            path: 'src/Controller/Component/AuthComponent.php'
+        -
+            message: '#Result of && is always false#'
+            path: 'src/Database/Query.php'
+        -
+            message: "#Call to function method_exists\\(\\) with string and 'parseDateTime' will always evaluate to false#"
+            path: 'src/Database/Type/DateTimeType.php'
+        -
+            message: '#Result of && is always false#'
+            path: 'src/Datasource/QueryCacher.php'
+        -
+            message: '#Strict comparison using === between IntlDateFormatter and false will always evaluate to false#'
+            path: 'src/I18n/DateFormatTrait.php'
+        -
+            message: '#Result of && is always false#'
+            path: 'src/Routing/Route/EntityRoute.php'
+        -
+            message: '#Result of || is always true#'
+            path: 'src/Shell/Task/ExtractTask.php'
+        -
+            message: '#Result of || is always true#'
+            path: 'src/Utility/Hash.php'
+        -
+            message: '#Call to function method_exists\(\) with \*NEVER\* and [^ ]+ will always evaluate to false#'
+            path: 'src/View/CellTrait.php'
+        -
+            message: '#Method Cake\\Utility\\Security::engine\(\) should return Cake\\Utility\\Crypto\\OpenSsl but returns object#'
+            path: 'src/Utility/Security.php'
+    earlyTerminatingMethodCalls:
+        Cake\Console\Shell:
+            - abort
+
+services:
+    -
+        class: Cake\PHPStan\AssociationTableMixinClassReflectionExtension
+        tags:
+            - phpstan.broker.methodsClassReflectionExtension
+            - phpstan.broker.propertiesClassReflectionExtension

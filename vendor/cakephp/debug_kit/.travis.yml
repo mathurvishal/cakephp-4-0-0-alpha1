@@ -1,0 +1,35 @@
+language: php
+
+php:
+  - 7.1
+  - 7.2
+
+dist: trusty
+
+env:
+  matrix:
+    - DB=mysql db_dsn='mysql://root@127.0.0.1/cakephp_test'
+    - DB=pgsql db_dsn='postgres://postgres@127.0.0.1/cakephp_test'
+    - DB=sqlite
+  global:
+    - DEFAULT=1
+
+matrix:
+  fast_finish: true
+
+install:
+  - composer install --prefer-dist --no-interaction
+
+before_script:
+  - if [ $DB = 'mysql' ]; then mysql -u root -e 'CREATE DATABASE cakephp_test;'; fi
+  - if [ $DB = 'pgsql' ]; then psql -c 'CREATE DATABASE cakephp_test;' -U postgres; fi
+
+script:
+  - if [[ $DEFAULT = 1 && $TRAVIS_PHP_VERSION = 7.1 ]]; then vendor/bin/phpunit --coverage-clover=clover.xml; fi
+  - if [[ $DEFAULT = 1 && $TRAVIS_PHP_VERSION != 7.1 ]]; then vendor/bin/phpunit; fi
+
+after_success:
+  - if [[ $DEFAULT = 1 && $TRAVIS_PHP_VERSION = 7.1 ]]; then bash <(curl -s https://codecov.io/bash); fi
+
+notifications:
+  email: false
